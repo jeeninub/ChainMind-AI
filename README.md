@@ -1,207 +1,241 @@
-## Multi-Agent Supply Chain Control Tower
+# ChainMind AI
+### Multi-Agent Intelligence for Supply Chain Decision-Making
 
-![Python](https://img.shields.io/badge/Python-3.12%2B-blue?style=plastic&logo=python&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Frontend-Streamlit-ff4b4b?style=plastic&logo=streamlit&logoColor=white)
-![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-32CD32?style=plastic)
-![LangSmith](https://img.shields.io/badge/Monitoring-LangSmith-FFFF00?style=plastic)
+<p align="center">
+  An explainable, LangGraph-powered supply chain control tower that coordinates specialized AI agents to analyze demand, inventory, supplier risk, and logistics decisions.
+</p>
 
-A minimal, educational **Multi-Agent Supply Chain Control Tower** built with Python, LangGraph, SQLAlchemy, and SQLite.  
-The system focuses on **explainable decisions**, **simple architecture**, and a **thin UI for inspection**, not production use.
-
-This project is designed as a **thin, elegant UI** on top of a **well-structured multi-agent backend**, ideal for demos, interviews, and experimentation with agentic workflows in real-world operations.
-
----
-
-## Features
-
-- **Multi-agent architecture** with distinct responsibilities:
-  - **Demand Agent** – Classifies demand risk and explains its reasoning.
-  - **Inventory Agent** – Decides whether to reorder and how much.
-  - **Risk Agent** – Evaluates supplier and logistics risk.
-  - **Logistics Agent** – Decides whether to expedite shipments.
-  - **Coordinator Agent** – Synthesizes all signals into a final decision.
-- **LangGraph workflow** (`create_supply_chain_graph`) that:
-  - Ingests a database snapshot.
-  - Runs agents in a structured flow.
-  - Routes through a **decision gate** and **human approval** when needed.
-- **Governance & safety layer**:
-  - Risk-aware decision routing.
-  - Optional human-in-the-loop approval before execution.
-- **Streamlit UI**:
-  - One-click “Run Supply Chain Decision Cycle”.
-  - Rich visualization of state, reasoning, and final outcomes.
-  - Governance metrics clearly surfaced.
+<p align="center">
+  ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
+  ![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-1C8D73)
+  ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit&logoColor=white)
+  ![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
+  ![License](https://img.shields.io/badge/License-Not%20Specified-lightgrey)
+</p>
 
 ---
+
+## Overview
+
+Supply chain operations involve interconnected decisions about demand fluctuations, inventory replenishment, supplier reliability, and shipment delays. Handling these decisions independently can make it difficult to assess operational risks and coordinate appropriate responses.
+
+**ChainMind AI** is a multi-agent decision-support system that brings these responsibilities into a coordinated workflow. Specialized AI agents analyze different aspects of a supply chain, while a central coordinator synthesizes their findings into a final recommendation.
+
+The workflow is orchestrated using **LangGraph** and incorporates risk-based decision routing and human approval checkpoints to make the decision process more transparent.
+
+## Key Features
+
+- **Multi-Agent Architecture:** Dedicated agents for demand analysis, inventory management, supplier and operational risk, and logistics.
+- **Centralized Decision Coordination:** Combines agent outputs into a consolidated supply chain recommendation.
+- **LangGraph Orchestration:** Connects data ingestion, analysis, decision routing, approval, and execution through a structured workflow.
+- **Risk-Based Decision Gates:** Routes decisions according to their assessed risk.
+- **Human-in-the-Loop Governance:** Supports approval or rejection checkpoints for decisions requiring human oversight.
+- **Interactive Streamlit Dashboard:** Displays inventory conditions, supplier information, purchase orders, shipments, agent reasoning, and final decisions.
+- **Persistent Demo Database:** Uses SQLite and SQLAlchemy to manage supply chain entities and operational state.
+- **LLM Integration:** Uses LangChain's chat model interface with OpenRouter for model-powered reasoning.
+- **Optional Observability:** Supports LangSmith tracing when configured.
+
+## System Architecture
+
+![ChainMind AI Architecture](ui/arch_diagram.png)
+
+### Decision Workflow
+
+1. **Data Ingestion:** Loads the current supply chain snapshot from the database.
+2. **Specialized Agent Analysis:** Demand, inventory, risk, and logistics agents evaluate the available information.
+3. **Decision Coordination:** The coordinator synthesizes the individual agent outputs into a final recommendation.
+4. **Risk Assessment:** A decision gate determines whether the workflow can proceed automatically or requires human approval.
+5. **Human Approval:** Decisions requiring oversight are routed through an approval checkpoint.
+6. **Execution:** The execution node processes permitted actions and records the resulting status.
+7. **Dashboard Visualization:** The Streamlit interface presents the operational state, agent reasoning, and decision outcome.
+
+## Technology Stack
+
+| Component | Technologies |
+|---|---|
+| Language | Python |
+| Agent orchestration | LangGraph |
+| LLM integration | LangChain, langchain-openai, OpenRouter |
+| Frontend | Streamlit |
+| Database | SQLite, SQLAlchemy, aiosqlite |
+| Data validation | Pydantic |
+| Environment management | python-dotenv |
+| Observability | Optional LangSmith tracing |
 
 ## Project Structure
 
-At a high level:
-
-- **`src/`** – Core backend logic
-  - `graph.py` – LangGraph state machine wiring nodes and agents.
-  - `state.py` – Typed state model for the workflow.
-  - `agents/` – Agent node implementations (demand, inventory, risk, logistics, coordinator).
-  - `nodes/` – Non-agent nodes (data ingestion, decision gate, execution, human approval).
-  - `db_service.py`, `db_init.py`, `models.py` – SQLite-based supply chain data and schema.
-  - `backend_interface.py` – Simple entry point the UI calls (`run_one_cycle`).
-  - `main.py` – CLI / console entry point for running async multi-product cycles.
-- **`ui/`** – Streamlit visualization layer
-  - `app.py` – Main Streamlit app.
-  - `helpers.py` – UI formatting helpers (currency, percentages, truncation, etc.).
-- **`data/`**
-  - `supply_chain.db` – SQLite database used by the workflow.
-- **Root**
-  - `requirements.txt` – Python dependencies.
-  - `.env` (not committed) – API keys and environment config.
-
----
-
-## Architecture Overview
-
-<p align="center">
-  <img src="ui/arch_diagram.png" alt="Multi-Agent Supply Chain Control Tower Architecture" width="800"/>
-</p>
+```text
+ChainMind-AI/
+├── demo/
+│   └── demo.py
+├── src/
+│   ├── agents/
+│   │   ├── coordinator_agent.py
+│   │   ├── demand_agent.py
+│   │   ├── inventory_agent.py
+│   │   ├── logistics_agent.py
+│   │   └── risk_agent.py
+│   ├── nodes/
+│   │   ├── data_ingestion.py
+│   │   ├── decision_gate.py
+│   │   ├── execution.py
+│   │   └── human_approval.py
+│   ├── backend_interface.py
+│   ├── db_init.py
+│   ├── db_service.py
+│   ├── graph.py
+│   ├── llm_config.py
+│   ├── main.py
+│   ├── models.py
+│   └── state.py
+├── ui/
+│   ├── app.py
+│   ├── helpers.py
+│   └── arch_diagram.png
+├── .env.example
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
 
 ## Getting Started
 
-### 1. Clone & set up environment
+### Prerequisites
+
+- Python 3.12 or a compatible Python version
+- Git
+- An OpenRouter API key for LLM-powered operations
+
+### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url> "Supply Chain Agent"
-cd "Supply Chain Agent"
+git clone https://github.com/jeeninub/ChainMind-AI.git
+cd ChainMind-AI
+```
 
-python -m venv venv
-venv\Scripts\activate  # On Windows
-# source venv/bin/activate  # On macOS / Linux
+### 2. Create a virtual environment
 
+**Windows PowerShell**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**macOS / Linux**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 pip install streamlit
 ```
 
-> **Note:** The core requirements for the backend are in `requirements.txt`. Streamlit is installed separately for the UI.
+### 4. Configure environment variables
 
-### 2. Configure environment variables
+Create a local `.env` file by copying the example template.
 
-Create a `.env` file in the project root (same folder as `requirements.txt`) and set your model / tracing keys, e.g.:
+**Windows PowerShell**
 
-```bash
-OPENROUTER_API_KEY=your_key_here
-LANGCHAIN_TRACING_V2=true
-LANGCHAIN_PROJECT="supply-chain-control-tower"
+```powershell
+Copy-Item .env.example .env
 ```
 
-The exact keys you need may depend on which LLM provider you use via `langchain-openai` / `langgraph`.
-
-### 3. Initialize / seed the database (optional if already present)
-
-If you want to (re)initialize the demo data from code, you can run the backend entrypoint:
+**macOS / Linux**
 
 ```bash
-venv\Scripts\activate
-python -m src.main
+cp .env.example .env
 ```
 
-This will:
+Update `.env` with your own credentials:
 
-- Initialize the SQLite database.
-- Seed example products, suppliers, orders, and shipments.
-- Run an async decision cycle for all products and print a text summary.
+```dotenv
+OPENROUTER_API_KEY=your_openrouter_api_key
+OPENROUTER_MODEL=openai/gpt-4o-mini
 
----
+DATABASE_URL=sqlite:///data/supply_chain.db
 
-## Running the Streamlit Control Tower UI
+# Optional LangSmith tracing
+LANGCHAIN_TRACING_V2=false
+LANGCHAIN_API_KEY=
+LANGCHAIN_PROJECT=chainmind-ai
+```
 
-From the project root:
+Keep `.env` private. Never commit API keys, access tokens, or other credentials to GitHub.
+
+### 5. Launch the dashboard
+
+From the project root, run:
 
 ```bash
-venv\Scripts\activate
 streamlit run ui/app.py
 ```
 
-Then open the browser tab Streamlit launches (typically `http://localhost:8501`).
+Streamlit will display a local URL, usually:
 
-In the UI you can:
+```text
+http://localhost:8501
+```
 
-- Select a **Product** from the dropdown.
-- Click *** Run Supply Chain Decision Cycle”**.
-- Inspect:
-  - **Supply Chain State** – inventory, suppliers, POs, shipments.
-  - **Agent Reasoning** – collapsible sections for each agent’s output.
-  - **Final Decision** – decision type, quantity, supplier, expedite flag, and explanation.
-  - **Governance & Safety** – decision risk, whether human approval was required, and approval status.
+Open the URL in your browser to access the control tower.
 
-This makes it very clear *why* the system chose a certain action, not just *what* it decided.
+### 6. Run the backend workflow
 
----
-
-## Architecture & Flow
-
-1. **Data Ingestion**
-   - Reads the current snapshot from `supply_chain.db` (product, inventory, suppliers, POs, shipments).
-2. **Agent Layer**
-   - Each agent receives the shared state and writes its own reasoning / recommendations into `agent_outputs`.
-3. **Coordinator Agent**
-   - Consumes the individual agent outputs and produces a **final decision** and natural-language explanation.
-4. **Decision Gate**
-   - Evaluates risk and decides whether to:
-     - **Auto-execute**, or
-     - Route to **Human Approval**.
-5. **Human Approval Node**
-   - Represents a governance checkpoint where a human can approve or block execution.
-6. **Execution Node**
-   - On approval (or low-risk auto-execution), updates downstream state (e.g., placing orders) and returns execution status.
-
-All of this is assembled into a **LangGraph `StateGraph`** in `graph.py`, which the UI calls via `backend_interface.run_one_cycle`.
-
----
-
-## CLI / Backend-Only Usage
-
-If you prefer to run the decision system without the UI (e.g., for testing or demos in a terminal), you can use:
+To initialize the demo data and execute the backend decision cycle:
 
 ```bash
-venv\Scripts\activate
 python -m src.main
 ```
 
-This will:
+The backend entry point initializes the database, seeds example supply chain records, and runs the decision workflow.
 
-- Build the LangGraph workflow.
-- Run the cycle for multiple products in parallel.
-- Print a structured summary to the console for each product.
+## Using the Dashboard
+
+The dashboard lets you:
+
+- Select a product for analysis.
+- Trigger a supply chain decision cycle.
+- Inspect inventory levels and reorder thresholds.
+- Review supplier reliability and lead times.
+- View active purchase orders and shipments.
+- Examine the reasoning produced by individual agents.
+- Review the consolidated recommendation and governance status.
+
+## Governance and Limitations
+
+ChainMind AI is an educational decision-support prototype, not a production supply chain platform.
+
+- The included database and operational records are intended for demonstration.
+- Model recommendations depend on the available data, prompts, and selected LLM.
+- Human approval checkpoints provide a governance mechanism; they do not guarantee that every decision is correct.
+- External enterprise integrations, live logistics feeds, production authentication, and deployment infrastructure are not included by default.
+- Validate recommendations before using them to make real operational or financial decisions.
+
+## Future Enhancements
+
+- Integrate real-time supplier, shipment, and demand data.
+- Add scenario simulation for demand spikes, supplier outages, and logistics disruptions.
+- Introduce automated evaluation and regression testing for agent decisions.
+- Add role-based access control and audit logging.
+- Extend observability with detailed traces and performance metrics.
+- Deploy the dashboard with managed secrets and persistent storage.
+
+## Author
+
+**Sujal Jain**  
+B.Tech. Computer Science and Engineering  
+The LNM Institute of Information Technology
+
+- GitHub: [@jeeninub](https://github.com/jeeninub)
+- Project Repository: [ChainMind-AI](https://github.com/jeeninub/ChainMind-AI)
+- LinkedIn: [Sujal Jain](https://www.linkedin.com/in/sujal-jain-1a483627b/)
 
 ---
 
-##  Governance & Safety Notes
-
-- The **decision gate** and **human approval node** model real-world governance:
-  - High-risk decisions can require a human approver.
-  - Metrics surface whether a decision needed approval and the final status.
-- The UI exposes:
-  - **Decision risk level**.
-  - Whether **human approval was required**.
-  - The **approval status** / human feedback.
-
-
----
-
-##  Technologies Used
-
-- **Python 3.12+**
-- **LangGraph** for graph-based multi-agent orchestration.
-- **LangChain / langchain-openai** for LLM tooling and integrations.
-- **SQLite + SQLAlchemy** for the supply chain data model.
-- **Streamlit** for the interactive control tower UI.
-- **Pydantic** for typed models and validation.
-
----
-
-##  Next Steps / Ideas
-
-- Plug into a real transactional system instead of the demo SQLite database.
-- Add more products, suppliers, and realistic lead-time / risk modeling.
-- Integrate external signals (e.g., logistics disruption feeds, pricing APIs).
-- Add a scenario selector in the UI (e.g., “port strike”, “supplier outage”, “demand spike”).
-
-
+*Built to explore explainable multi-agent AI workflows for operational decision support.*
