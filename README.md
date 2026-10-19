@@ -1,66 +1,87 @@
 # ChainMind AI
+
 ### Multi-Agent Intelligence for Supply Chain Decision-Making
 
 <p align="center">
-  An explainable, LangGraph-powered supply chain control tower that coordinates specialized AI agents to analyze demand, inventory, supplier risk, and logistics decisions.
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/LangGraph-1C8D73?style=for-the-badge" alt="LangGraph">
+  <img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=chainlink&logoColor=white" alt="LangChain">
+  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
 </p>
 
 <p align="center">
-  ![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
-  ![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-1C8D73)
-  ![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit&logoColor=white)
-  ![SQLite](https://img.shields.io/badge/Database-SQLite-003B57?logo=sqlite&logoColor=white)
-  ![License](https://img.shields.io/badge/License-Not%20Specified-lightgrey)
+  A multi-agent AI control tower that analyzes supply chain operations, identifies risks, and coordinates intelligent decisions across demand, inventory, and logistics.
 </p>
 
 ---
 
 ## Overview
 
-Supply chain operations involve interconnected decisions about demand fluctuations, inventory replenishment, supplier reliability, and shipment delays. Handling these decisions independently can make it difficult to assess operational risks and coordinate appropriate responses.
+Supply chain management requires coordinated decisions across demand forecasting, inventory availability, supplier reliability, and logistics operations. When these functions operate in isolation, identifying risks and responding to disruptions becomes more difficult.
 
-**ChainMind AI** is a multi-agent decision-support system that brings these responsibilities into a coordinated workflow. Specialized AI agents analyze different aspects of a supply chain, while a central coordinator synthesizes their findings into a final recommendation.
+**ChainMind AI** is a multi-agent decision-support system designed to coordinate specialized AI agents within a structured workflow. Each agent focuses on a particular operational responsibility, while a central coordinator combines their findings into a consolidated recommendation.
 
-The workflow is orchestrated using **LangGraph** and incorporates risk-based decision routing and human approval checkpoints to make the decision process more transparent.
+Built with **Python, LangChain, and LangGraph**, the system demonstrates how agent-based reasoning, workflow orchestration, risk-based decision routing, and human approval checkpoints can work together in a supply chain environment.
 
 ## Key Features
 
-- **Multi-Agent Architecture:** Dedicated agents for demand analysis, inventory management, supplier and operational risk, and logistics.
-- **Centralized Decision Coordination:** Combines agent outputs into a consolidated supply chain recommendation.
-- **LangGraph Orchestration:** Connects data ingestion, analysis, decision routing, approval, and execution through a structured workflow.
-- **Risk-Based Decision Gates:** Routes decisions according to their assessed risk.
-- **Human-in-the-Loop Governance:** Supports approval or rejection checkpoints for decisions requiring human oversight.
-- **Interactive Streamlit Dashboard:** Displays inventory conditions, supplier information, purchase orders, shipments, agent reasoning, and final decisions.
-- **Persistent Demo Database:** Uses SQLite and SQLAlchemy to manage supply chain entities and operational state.
-- **LLM Integration:** Uses LangChain's chat model interface with OpenRouter for model-powered reasoning.
-- **Optional Observability:** Supports LangSmith tracing when configured.
+- **Multi-Agent Architecture:** Specialized agents for demand analysis, inventory management, risk assessment, logistics, and decision coordination.
+- **Centralized Decision Coordination:** Consolidates individual agent outputs into a unified supply chain recommendation.
+- **LangGraph Workflow Orchestration:** Connects data ingestion, agent analysis, decision routing, approval, and execution.
+- **Risk-Based Decision Gates:** Routes decisions through workflow checkpoints based on assessed risk.
+- **Human-in-the-Loop Approval:** Supports human review for decisions requiring additional oversight.
+- **Interactive Streamlit Dashboard:** Provides a visual interface for exploring supply chain information and decision outcomes.
+- **Persistent Data Layer:** Uses SQLite and SQLAlchemy for storing and retrieving operational records.
+- **LLM-Powered Reasoning:** Integrates chat models through LangChain and OpenRouter.
+- **Modular Design:** Separates agents, workflow nodes, database services, and the user interface for easier maintenance and extension.
 
 ## System Architecture
 
-![ChainMind AI Architecture](ui/arch_diagram.png)
+The application is organized into four main layers:
 
-### Decision Workflow
+1. **Data Layer:** Stores supply chain records and provides database access.
+2. **Agent Layer:** Performs demand, inventory, logistics, and risk analysis.
+3. **Orchestration Layer:** Coordinates agent execution and manages decision and approval checkpoints.
+4. **Presentation Layer:** Displays operational data and workflow results through Streamlit.
 
-1. **Data Ingestion:** Loads the current supply chain snapshot from the database.
-2. **Specialized Agent Analysis:** Demand, inventory, risk, and logistics agents evaluate the available information.
-3. **Decision Coordination:** The coordinator synthesizes the individual agent outputs into a final recommendation.
-4. **Risk Assessment:** A decision gate determines whether the workflow can proceed automatically or requires human approval.
-5. **Human Approval:** Decisions requiring oversight are routed through an approval checkpoint.
-6. **Execution:** The execution node processes permitted actions and records the resulting status.
-7. **Dashboard Visualization:** The Streamlit interface presents the operational state, agent reasoning, and decision outcome.
+### Workflow
+
+```mermaid
+flowchart TD
+    A[Supply Chain Data] --> B[Data Ingestion]
+    B --> C[Demand Agent]
+    B --> D[Inventory Agent]
+    B --> E[Risk Agent]
+    B --> F[Logistics Agent]
+    C --> G[Coordinator Agent]
+    D --> G
+    E --> G
+    F --> G
+    G --> H{Decision Gate}
+    H -->|Approval Required| I[Human Approval]
+    H -->|Can Proceed| J[Execution]
+    I -->|Approved| J
+    I -->|Rejected| K[Hold or Review]
+    J --> L[Updated Operational State]
+    L --> M[Streamlit Dashboard]
+    K --> M
+```
 
 ## Technology Stack
 
-| Component | Technologies |
+| Component | Technology |
 |---|---|
-| Language | Python |
-| Agent orchestration | LangGraph |
-| LLM integration | LangChain, langchain-openai, OpenRouter |
-| Frontend | Streamlit |
-| Database | SQLite, SQLAlchemy, aiosqlite |
-| Data validation | Pydantic |
-| Environment management | python-dotenv |
-| Observability | Optional LangSmith tracing |
+| Programming Language | Python |
+| Agent Orchestration | LangGraph |
+| LLM Integration | LangChain, OpenRouter |
+| User Interface | Streamlit |
+| Database | SQLite |
+| ORM / Database Access | SQLAlchemy |
+| Async Database Access | aiosqlite |
+| Data Validation | Pydantic |
+| Environment Configuration | python-dotenv |
+| Optional Observability | LangSmith |
 
 ## Project Structure
 
@@ -94,26 +115,26 @@ ChainMind-AI/
 │   └── arch_diagram.png
 ├── .env.example
 ├── .gitignore
-├── requirements.txt
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.12 or a compatible Python version
+- Python installed on your system
 - Git
-- An OpenRouter API key for LLM-powered operations
+- An OpenRouter API key for LLM-powered functionality
 
-### 1. Clone the repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/jeeninub/ChainMind-AI.git
 cd ChainMind-AI
 ```
 
-### 2. Create a virtual environment
+### 2. Create a Virtual Environment
 
 **Windows PowerShell**
 
@@ -129,7 +150,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install dependencies
+### 3. Install Dependencies
 
 ```bash
 python -m pip install --upgrade pip
@@ -137,9 +158,9 @@ pip install -r requirements.txt
 pip install streamlit
 ```
 
-### 4. Configure environment variables
+### 4. Configure Environment Variables
 
-Create a local `.env` file by copying the example template.
+Create a local `.env` file from the provided template.
 
 **Windows PowerShell**
 
@@ -153,78 +174,69 @@ Copy-Item .env.example .env
 cp .env.example .env
 ```
 
-Update `.env` with your own credentials:
+Update `.env` with your own API key and desired model:
 
 ```dotenv
 OPENROUTER_API_KEY=your_openrouter_api_key
 OPENROUTER_MODEL=openai/gpt-4o-mini
-
 DATABASE_URL=sqlite:///data/supply_chain.db
-
-# Optional LangSmith tracing
-LANGCHAIN_TRACING_V2=false
-LANGCHAIN_API_KEY=
-LANGCHAIN_PROJECT=chainmind-ai
 ```
 
-Keep `.env` private. Never commit API keys, access tokens, or other credentials to GitHub.
+Replace the placeholder with your own OpenRouter API key. Never commit `.env` or real credentials to GitHub.
 
-### 5. Launch the dashboard
+### 5. Launch the Dashboard
 
-From the project root, run:
+From the repository root, run:
 
 ```bash
 streamlit run ui/app.py
 ```
 
-Streamlit will display a local URL, usually:
+Open the local URL displayed by Streamlit, usually:
 
-```text
-http://localhost:8501
-```
+`http://localhost:8501`
 
-Open the URL in your browser to access the control tower.
+### 6. Run the Backend Workflow
 
-### 6. Run the backend workflow
-
-To initialize the demo data and execute the backend decision cycle:
+To run the backend entry point:
 
 ```bash
 python -m src.main
 ```
 
-The backend entry point initializes the database, seeds example supply chain records, and runs the decision workflow.
+The backend initializes the database and executes the configured supply chain workflow. The exact behavior depends on the current implementation and environment configuration.
 
-## Using the Dashboard
+## Application Use Cases
 
-The dashboard lets you:
+ChainMind AI is designed to demonstrate agent-based decision support for scenarios such as:
 
-- Select a product for analysis.
-- Trigger a supply chain decision cycle.
-- Inspect inventory levels and reorder thresholds.
-- Review supplier reliability and lead times.
-- View active purchase orders and shipments.
-- Examine the reasoning produced by individual agents.
-- Review the consolidated recommendation and governance status.
+- Identifying inventory shortages and replenishment needs.
+- Evaluating demand changes and operational constraints.
+- Highlighting supplier and supply chain risks.
+- Reviewing logistics-related issues.
+- Coordinating recommendations from multiple specialized agents.
+- Routing decisions for human review before execution.
+
+These are intended use cases; actual outputs depend on the configured data, agent logic, and selected LLM.
 
 ## Governance and Limitations
 
-ChainMind AI is an educational decision-support prototype, not a production supply chain platform.
+ChainMind AI is an educational prototype for exploring multi-agent AI workflows. It is not a production-ready enterprise supply chain platform.
 
-- The included database and operational records are intended for demonstration.
-- Model recommendations depend on the available data, prompts, and selected LLM.
-- Human approval checkpoints provide a governance mechanism; they do not guarantee that every decision is correct.
-- External enterprise integrations, live logistics feeds, production authentication, and deployment infrastructure are not included by default.
-- Validate recommendations before using them to make real operational or financial decisions.
+- Recommendations depend on data quality and model outputs.
+- LLM-generated decisions may be incomplete or incorrect.
+- Human approval checkpoints provide oversight but do not guarantee correctness.
+- Live enterprise integrations, production authentication, and managed deployment infrastructure are not included by default.
+- Validate recommendations before applying them to real supply chain operations.
 
 ## Future Enhancements
 
-- Integrate real-time supplier, shipment, and demand data.
-- Add scenario simulation for demand spikes, supplier outages, and logistics disruptions.
+- Integrate live inventory, supplier, and shipment data.
+- Add demand forecasting and disruption scenario simulation.
 - Introduce automated evaluation and regression testing for agent decisions.
-- Add role-based access control and audit logging.
-- Extend observability with detailed traces and performance metrics.
-- Deploy the dashboard with managed secrets and persistent storage.
+- Add role-based access control and detailed audit trails.
+- Improve observability with workflow traces and performance metrics.
+- Deploy the dashboard with secure secret management and persistent storage.
 
 ## Author
 
@@ -232,10 +244,267 @@ ChainMind AI is an educational decision-support prototype, not a production supp
 B.Tech. Computer Science and Engineering  
 The LNM Institute of Information Technology
 
-- GitHub: [@jeeninub](https://github.com/jeeninub)
-- Project Repository: [ChainMind-AI](https://github.com/jeeninub/ChainMind-AI)
-- LinkedIn: [Sujal Jain](https://www.linkedin.com/in/sujal-jain-1a483627b/)
+- **GitHub:** [jeeninub](https://github.com/jeeninub)
+- **Project:** [ChainMind-AI](https://github.com/jeeninub/ChainMind-AI)
+- **LinkedIn:** [Sujal Jain](https://www.linkedin.com/in/sujal-jain-1a483627b/)
 
 ---
 
-*Built to explore explainable multi-agent AI workflows for operational decision support.*
+<p align="center">
+  Built to explore multi-agent AI, workflow orchestration, and intelligent supply chain decision support.
+</p>
+# ChainMind AI
+
+### Multi-Agent Intelligence for Supply Chain Decision-Making
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/LangGraph-1C8D73?style=for-the-badge" alt="LangGraph">
+  <img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=chainlink&logoColor=white" alt="LangChain">
+  <img src="https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white" alt="Streamlit">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+</p>
+
+<p align="center">
+  A multi-agent AI control tower that analyzes supply chain operations, identifies risks, and coordinates intelligent decisions across demand, inventory, and logistics.
+</p>
+
+---
+
+## Overview
+
+Supply chain management requires coordinated decisions across demand forecasting, inventory availability, supplier reliability, and logistics operations. When these functions operate in isolation, identifying risks and responding to disruptions becomes more difficult.
+
+**ChainMind AI** is a multi-agent decision-support system designed to coordinate specialized AI agents within a structured workflow. Each agent focuses on a particular operational responsibility, while a central coordinator combines their findings into a consolidated recommendation.
+
+Built with **Python, LangChain, and LangGraph**, the system demonstrates how agent-based reasoning, workflow orchestration, risk-based decision routing, and human approval checkpoints can work together in a supply chain environment.
+
+## Key Features
+
+- **Multi-Agent Architecture:** Specialized agents for demand analysis, inventory management, risk assessment, logistics, and decision coordination.
+- **Centralized Decision Coordination:** Consolidates individual agent outputs into a unified supply chain recommendation.
+- **LangGraph Workflow Orchestration:** Connects data ingestion, agent analysis, decision routing, approval, and execution.
+- **Risk-Based Decision Gates:** Routes decisions through workflow checkpoints based on assessed risk.
+- **Human-in-the-Loop Approval:** Supports human review for decisions requiring additional oversight.
+- **Interactive Streamlit Dashboard:** Provides a visual interface for exploring supply chain information and decision outcomes.
+- **Persistent Data Layer:** Uses SQLite and SQLAlchemy for storing and retrieving operational records.
+- **LLM-Powered Reasoning:** Integrates chat models through LangChain and OpenRouter.
+- **Modular Design:** Separates agents, workflow nodes, database services, and the user interface for easier maintenance and extension.
+
+## System Architecture
+
+The application is organized into four main layers:
+
+1. **Data Layer:** Stores supply chain records and provides database access.
+2. **Agent Layer:** Performs demand, inventory, logistics, and risk analysis.
+3. **Orchestration Layer:** Coordinates agent execution and manages decision and approval checkpoints.
+4. **Presentation Layer:** Displays operational data and workflow results through Streamlit.
+
+### Workflow
+
+```mermaid
+flowchart TD
+    A[Supply Chain Data] --> B[Data Ingestion]
+    B --> C[Demand Agent]
+    B --> D[Inventory Agent]
+    B --> E[Risk Agent]
+    B --> F[Logistics Agent]
+    C --> G[Coordinator Agent]
+    D --> G
+    E --> G
+    F --> G
+    G --> H{Decision Gate}
+    H -->|Approval Required| I[Human Approval]
+    H -->|Can Proceed| J[Execution]
+    I -->|Approved| J
+    I -->|Rejected| K[Hold or Review]
+    J --> L[Updated Operational State]
+    L --> M[Streamlit Dashboard]
+    K --> M
+```
+
+## Technology Stack
+
+| Component | Technology |
+|---|---|
+| Programming Language | Python |
+| Agent Orchestration | LangGraph |
+| LLM Integration | LangChain, OpenRouter |
+| User Interface | Streamlit |
+| Database | SQLite |
+| ORM / Database Access | SQLAlchemy |
+| Async Database Access | aiosqlite |
+| Data Validation | Pydantic |
+| Environment Configuration | python-dotenv |
+| Optional Observability | LangSmith |
+
+## Project Structure
+
+```text
+ChainMind-AI/
+├── demo/
+│   └── demo.py
+├── src/
+│   ├── agents/
+│   │   ├── coordinator_agent.py
+│   │   ├── demand_agent.py
+│   │   ├── inventory_agent.py
+│   │   ├── logistics_agent.py
+│   │   └── risk_agent.py
+│   ├── nodes/
+│   │   ├── data_ingestion.py
+│   │   ├── decision_gate.py
+│   │   ├── execution.py
+│   │   └── human_approval.py
+│   ├── backend_interface.py
+│   ├── db_init.py
+│   ├── db_service.py
+│   ├── graph.py
+│   ├── llm_config.py
+│   ├── main.py
+│   ├── models.py
+│   └── state.py
+├── ui/
+│   ├── app.py
+│   ├── helpers.py
+│   └── arch_diagram.png
+├── .env.example
+├── .gitignore
+├── README.md
+└── requirements.txt
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Python installed on your system
+- Git
+- An OpenRouter API key for LLM-powered functionality
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/jeeninub/ChainMind-AI.git
+cd ChainMind-AI
+```
+
+### 2. Create a Virtual Environment
+
+**Windows PowerShell**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**macOS / Linux**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install Dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+pip install streamlit
+```
+
+### 4. Configure Environment Variables
+
+Create a local `.env` file from the provided template.
+
+**Windows PowerShell**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+**macOS / Linux**
+
+```bash
+cp .env.example .env
+```
+
+Update `.env` with your own API key and desired model:
+
+```dotenv
+OPENROUTER_API_KEY=your_openrouter_api_key
+OPENROUTER_MODEL=openai/gpt-4o-mini
+DATABASE_URL=sqlite:///data/supply_chain.db
+```
+
+Replace the placeholder with your own OpenRouter API key. Never commit `.env` or real credentials to GitHub.
+
+### 5. Launch the Dashboard
+
+From the repository root, run:
+
+```bash
+streamlit run ui/app.py
+```
+
+Open the local URL displayed by Streamlit, usually:
+
+`http://localhost:8501`
+
+### 6. Run the Backend Workflow
+
+To run the backend entry point:
+
+```bash
+python -m src.main
+```
+
+The backend initializes the database and executes the configured supply chain workflow. The exact behavior depends on the current implementation and environment configuration.
+
+## Application Use Cases
+
+ChainMind AI is designed to demonstrate agent-based decision support for scenarios such as:
+
+- Identifying inventory shortages and replenishment needs.
+- Evaluating demand changes and operational constraints.
+- Highlighting supplier and supply chain risks.
+- Reviewing logistics-related issues.
+- Coordinating recommendations from multiple specialized agents.
+- Routing decisions for human review before execution.
+
+These are intended use cases; actual outputs depend on the configured data, agent logic, and selected LLM.
+
+## Governance and Limitations
+
+ChainMind AI is an educational prototype for exploring multi-agent AI workflows. It is not a production-ready enterprise supply chain platform.
+
+- Recommendations depend on data quality and model outputs.
+- LLM-generated decisions may be incomplete or incorrect.
+- Human approval checkpoints provide oversight but do not guarantee correctness.
+- Live enterprise integrations, production authentication, and managed deployment infrastructure are not included by default.
+- Validate recommendations before applying them to real supply chain operations.
+
+## Future Enhancements
+
+- Integrate live inventory, supplier, and shipment data.
+- Add demand forecasting and disruption scenario simulation.
+- Introduce automated evaluation and regression testing for agent decisions.
+- Add role-based access control and detailed audit trails.
+- Improve observability with workflow traces and performance metrics.
+- Deploy the dashboard with secure secret management and persistent storage.
+
+## Author
+
+**Sujal Jain**  
+B.Tech. Computer Science and Engineering  
+The LNM Institute of Information Technology
+
+- **GitHub:** [jeeninub](https://github.com/jeeninub)
+- **Project:** [ChainMind-AI](https://github.com/jeeninub/ChainMind-AI)
+- **LinkedIn:** [Sujal Jain](https://www.linkedin.com/in/sujal-jain-1a483627b/)
+
+---
+
+<p align="center">
+  Built to explore multi-agent AI, workflow orchestration, and intelligent supply chain decision support.
+</p>
